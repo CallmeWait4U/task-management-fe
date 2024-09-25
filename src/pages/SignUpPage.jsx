@@ -10,6 +10,7 @@ const SignUpPage = () => {
   const [message, setMessage] = useState('')
   const navigate = useNavigate()
   const { mutate } = useMutation({ mutationFn: useSignUp })
+  const regularExpression  = /^(?=.*[0-9])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{6,16}$/;
 
   const onSubmit = (data) => {
     setIsLoading(true);
@@ -56,7 +57,15 @@ const SignUpPage = () => {
             id="password"
             className="p-2 border rounded-lg"
             placeholder="Enter your password"
-            {...register("password", { required: "Trường bắt buộc" })}
+            {...register("password", 
+              { required: "Trường bắt buộc", 
+                validate: (val) => {
+                  if (!regularExpression.test(val)) {
+                    return 'Mật khẩu phải có độ dài từ 6 đến 16, ít nhất 1 chữ số và ít nhất 1 kí tự đặc biệt'
+                  }
+                } 
+              })
+            }
           />
           {errors.password && <p className="text-red-500">{errors.password.message}</p>}
           {!errors.password && <p className="text-red-500 text-white">.</p>}
